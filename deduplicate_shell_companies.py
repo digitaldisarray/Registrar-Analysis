@@ -37,6 +37,7 @@ grouped.to_json('grouped.json', index=False)
 # Create a mapping of old IDs to new IDs
 # Also (optionally) print changes for sanity check
 id_map = {}
+name_id_list = pd.DataFrame(columns=['new_name', 'new_id'])
 for _, row in grouped.iterrows():
     new_id = row['id']
     old_ids = df[df['cleaned_name'] == row['cleaned_name']]['id'].tolist()
@@ -46,7 +47,12 @@ for _, row in grouped.iterrows():
             old_name = df[df['id'] == old_id]['name'].values[0]  # Get the original name of the old ID
             cleaned_name = row["cleaned_name"]
             new_name = row["name"]
+            # debug print
             #print(f"ID {old_id} ({old_name}) with cleaned name '{cleaned_name}' becomes ID {new_id} ({new_name})")
+            name_id_list.loc[len(name_id_list)] = [new_name, new_id]
+
+name_id_list.drop_duplicates().to_csv('name_id_list.csv', index=False)
+            
 
 # Apply the id mappings to the reports
 reports = pd.read_json("/data/all_types_domains_balanced_registered_domains_whois_parsed_correct_registrar_names.json", lines=True)
@@ -57,8 +63,8 @@ for index, row in reports.iterrows():
     name = row["registrar"]
     old_id = row["registrar_id"]
     new_id = id_map[old_id]
-    if "Gname" in name:
-        print(f"Remapping {old_id} for {name} to {new_id}")
+    # debug print
+    #print(f"Remapping {old_id} for {name} to {new_id}")
     reports.loc[index, "registrar_id"] = new_id
     reports.loc[index, "registrar"] = grouped[grouped["id"] == new_id]["name"].values[0] #get new name
 reports.to_json("/data/all_types_domains_balanced_registered_domains_whois_parsed_correct_registrar_names_deduplicated_ids.json", orient='records', lines=True)
