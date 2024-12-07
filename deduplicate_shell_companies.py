@@ -7,11 +7,11 @@ df = pd.read_json('/data/registrar_domain_count_flat.json')
 print("Starting data:")
 print(df)
 
-# Normalize names by removing numbers and extra spaces
+# Remove digits and special characters, and strip leading/trailing spaces
 def clean_name(name):
     if pd.isnull(name):
         return name
-    return re.sub(r'\d+', '', name).strip()
+    return re.sub(r'[^a-zA-Z\s]', '', name).strip()
 
 df['cleaned_name'] = df['name'].apply(clean_name)
 
