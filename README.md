@@ -9,7 +9,7 @@ Pricing data has been left out due to its large size. It was a daily scrape of t
 
 ## Files
 - `service-payment-analysis.ipynb`: Analysis of correlation between services offered + payment methods and malicious activity
-- `graph.ipynb`: Analysis of pricing data and its correlation with purchasing
+- `pricing-analysis.ipynb`: Analysis of pricing data and its correlation with purchasing
 - `data/`: Most of the data we used
     - `tld-list-match-registrar-by-id.csv`: Used to give 
     - `registrar_properties.csv`: Manually collected features and payment methods for some registrars
